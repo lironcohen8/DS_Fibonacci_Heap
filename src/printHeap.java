@@ -8,9 +8,7 @@ public class printHeap extends FibonacciHeap {
         FibonacciHeap h1 = new FibonacciHeap();
          insertN(h1,30);
         printHeapFib(h1);
-         h1.deleteMin();
-        printHeapFib(h1);
-
+        System.out.println(h1.findMin().getKey());
     }
 
     public static  void printHeapFib(FibonacciHeap heap) {

@@ -308,4 +308,9 @@ public class FibonacciHeap
   	  }
 
     }
+    
+    public static void main(String[] args) {
+    	FibonacciHeap h = new FibonacciHeap();
+    	
+    }
 }
