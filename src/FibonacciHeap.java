@@ -8,7 +8,25 @@
  */
 public class FibonacciHeap
 {
-
+	private HeapNode min;
+	private HeapNode first;
+	private int size;
+	
+	/**
+	 * public FibonacciHeap()
+	 *
+	 * precondition: none
+	 * 
+	 * The method creates a new heap with default values..
+	 *   
+	 */
+	public FibonacciHeap() {
+		this.min = null;
+		this.first = null;
+		this.size = 0;
+	}
+	
+	
    /**
     * public boolean isEmpty()
     *
@@ -20,7 +38,7 @@ public class FibonacciHeap
     */
     public boolean isEmpty()
     {
-    	return false; // should be replaced by student code
+    	return this.size == 0; // should be replaced by student code
     }
 		
    /**
@@ -32,7 +50,24 @@ public class FibonacciHeap
     */
     public HeapNode insert(int key)
     {    
-    	return new HeapNode(key); // should be replaced by student code
+    	HeapNode newFirst = new HeapNode(key);
+    	
+    	if (this.isEmpty())
+    		this.min = newFirst;
+    	
+    	else {
+    		this.first.prevBro.setNextBro(newFirst); // next of last
+    		newFirst.setPrevBro(this.first.prevBro); // prev of new first 
+    		this.first.prevBro = newFirst; // prev of first
+    		newFirst.setNextBro(this.first); // next of new first
+    		if (key < this.min.getKey())
+        		this.min = newFirst;
+    	}
+    	
+    	this.first = newFirst;
+    	this.size++;
+    
+    	return newFirst;
     }
 
    /**
@@ -55,7 +90,7 @@ public class FibonacciHeap
     */
     public HeapNode findMin()
     {
-    	return new HeapNode(0);// should be replaced by student code
+    	return this.min;// should be replaced by student code
     } 
     
    /**
@@ -77,7 +112,7 @@ public class FibonacciHeap
     */
     public int size()
     {
-    	return 0; // should be replaced by student code
+    	return this.size; // should be replaced by student code
     }
     	
     /**
@@ -183,6 +218,8 @@ public class FibonacciHeap
 
   	public HeapNode(int key) {
 	    this.key = key;
+	    this.prevBro = this;
+	    this.nextBro = this;
       }
 
   	public int getKey() {
