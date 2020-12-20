@@ -69,6 +69,35 @@ public class FibonacciHeap
     
     	return newFirst;
     }
+    
+    /**
+     * private HeapNode link(HeapNode x, HeapNode y)()
+     *
+     * The method creates a simple link between 
+     * two trees of the same rank, by comparing their keys.
+     */    
+    private HeapNode link(HeapNode x, HeapNode y) {
+    	HeapNode temp = null;
+    	if (x.getKey() > y.getKey()) { // in order to make y the bigger-key-node
+    		temp = y;
+    		y = x;
+    		x = temp;
+    	}
+    	if (x.getFirstChild() == null) { // if x doesn't hasve children
+    		y.setNextBro(y);
+    		y.setPrevBro(y);
+    	}
+    	else {
+    		y.setNextBro(x.getFirstChild()); // old first child to y
+    		x.getFirstChild().setPrevBro(y); // old first child to y
+    		y.setPrevBro(x.getFirstChild().getPrevBro());//old last child to y
+    		x.getFirstChild().getPrevBro().setNextBro(y);// old last child to y
+    	}
+    	x.setFirstChild(y);
+    	y.setParent(x);
+    	
+    	return x;
+    }
 
    /**
     * public void deleteMin()
