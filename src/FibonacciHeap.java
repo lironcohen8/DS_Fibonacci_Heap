@@ -130,7 +130,17 @@ public class FibonacciHeap
     */
     public void meld (FibonacciHeap heap2)
     {
-    	  return; // should be replaced by student code   		
+    	  if (heap2.findMin().getKey() < this.findMin().getKey()) // updating min if necessary
+    		  this.min = heap2.findMin();
+    	  
+    	  HeapNode heap2Last = heap2.first.prevBro;
+    	  HeapNode thisLast = this.first.prevBro;
+    	  thisLast.setNextBro(heap2.first); // this last and heap2 first
+    	  heap2.first.setPrevBro(thisLast); // this last and heap2 first
+    	  heap2Last.setNextBro(this.first); // heap2 last and this first
+    	  this.first.setPrevBro(heap2Last); // heap2 last and this first
+    	  
+    	  this.size = this.size + heap2.size(); // updating size
     }
 
    /**
@@ -308,9 +318,5 @@ public class FibonacciHeap
   	  }
 
     }
-    
-    public static void main(String[] args) {
-    	FibonacciHeap h = new FibonacciHeap();
-    	
-    }
+   
 }
