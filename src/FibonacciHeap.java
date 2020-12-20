@@ -173,7 +173,13 @@ public class FibonacciHeap
     */
     public class HeapNode{
 
-	public int key;
+	public int key; // the key of the node
+	private int rank; // the rank (number of children) of the node
+	private int mark; // the mark of the node
+	private HeapNode firstChild; // the left-most child of the node
+	private HeapNode prevBro; // the previous (to the left or cyclic) brother of the node
+	private HeapNode nextBro; // the next (to the right) brother of the node
+	private HeapNode parent; // the parent of the node
 
   	public HeapNode(int key) {
 	    this.key = key;
@@ -182,6 +188,58 @@ public class FibonacciHeap
   	public int getKey() {
 	    return this.key;
       }
+  	
+  	private void setKey(int key) {
+  		this.key = key;
+  	  }
+  	
+  	private int getRank() {
+	    return this.rank;
+      }
+  	
+  	private void setRank(int rank) {
+  		this.rank = rank;
+  	  }
+  	
+  	private int getMark() {
+	    return this.mark;
+      }
+  	
+  	private void setMark(int mark) {
+  		this.mark = mark;
+  	  }
+  	
+  	private HeapNode getFirstChild() {
+	    return this.firstChild;
+      }
+  	
+  	private void setFirstChild(HeapNode child) {
+  		this.firstChild = child;
+  	  }
+  	
+  	private HeapNode getPrevBro() {
+	    return this.prevBro;
+      }
+  	
+  	private void setPrevBro(HeapNode prevBro) {
+  		this.prevBro = prevBro;
+  	  }
+  	
+  	private HeapNode getNextBro() {
+	    return this.nextBro;
+      }
+  	
+  	private void setNextBro(HeapNode nextBro) {
+  		this.nextBro = nextBro;
+  	  }
+  	
+  	private HeapNode getParent() {
+	    return this.parent;
+      }
+  	
+  	private void setParent(HeapNode parent) {
+  		this.parent = parent;
+  	  }
 
     }
 }
