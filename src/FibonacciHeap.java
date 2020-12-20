@@ -8,9 +8,9 @@
  */
 public class FibonacciHeap
 {
-	private HeapNode min;
-	private HeapNode first;
-	private int size;
+	protected HeapNode min;
+	protected HeapNode first;
+	protected int size;
 	
 	/**
 	 * public FibonacciHeap()
@@ -74,9 +74,9 @@ public class FibonacciHeap
      * private HeapNode link(HeapNode x, HeapNode y)()
      *
      * The method creates a simple link between 
-     * two trees of the same rank, by comparing their keys.
+     * two trees of the same order, by comparing their keys.
      */    
-    private HeapNode link(HeapNode x, HeapNode y) {
+    protected HeapNode link(HeapNode x, HeapNode y) {
     	HeapNode temp = null;
     	if (x.getKey() > y.getKey()) { // in order to make y the bigger-key-node
     		temp = y;
@@ -238,12 +238,12 @@ public class FibonacciHeap
     public class HeapNode{
 
 	public int key; // the key of the node
-	private int rank; // the rank (number of children) of the node
-	private int mark; // the mark of the node
-	private HeapNode firstChild; // the left-most child of the node
-	private HeapNode prevBro; // the previous (to the left or cyclic) brother of the node
-	private HeapNode nextBro; // the next (to the right) brother of the node
-	private HeapNode parent; // the parent of the node
+	int rank; // the rank (number of children) of the node
+	int mark; // the mark of the node
+	HeapNode firstChild; // the left-most child of the node
+	HeapNode prevBro; // the previous (to the left or cyclic) brother of the node
+	HeapNode nextBro; // the next (to the right) brother of the node
+	HeapNode parent; // the parent of the node
 
   	public HeapNode(int key) {
 	    this.key = key;
@@ -255,55 +255,55 @@ public class FibonacciHeap
 	    return this.key;
       }
   	
-  	private void setKey(int key) {
+  	void setKey(int key) {
   		this.key = key;
   	  }
   	
-  	private int getRank() {
+  	int getRank() {
 	    return this.rank;
       }
   	
-  	private void setRank(int rank) {
+  	void setRank(int rank) {
   		this.rank = rank;
   	  }
   	
-  	private int getMark() {
+  	int getMark() {
 	    return this.mark;
       }
   	
-  	private void setMark(int mark) {
+  	void setMark(int mark) {
   		this.mark = mark;
   	  }
   	
-  	private HeapNode getFirstChild() {
+  	HeapNode getFirstChild() {
 	    return this.firstChild;
       }
   	
-  	private void setFirstChild(HeapNode child) {
+  	void setFirstChild(HeapNode child) {
   		this.firstChild = child;
   	  }
   	
-  	private HeapNode getPrevBro() {
+  	HeapNode getPrevBro() {
 	    return this.prevBro;
       }
   	
-  	private void setPrevBro(HeapNode prevBro) {
+  	void setPrevBro(HeapNode prevBro) {
   		this.prevBro = prevBro;
   	  }
   	
-  	private HeapNode getNextBro() {
+  	HeapNode getNextBro() {
 	    return this.nextBro;
       }
   	
-  	private void setNextBro(HeapNode nextBro) {
+  	void setNextBro(HeapNode nextBro) {
   		this.nextBro = nextBro;
   	  }
   	
-  	private HeapNode getParent() {
+  	HeapNode getParent() {
 	    return this.parent;
       }
   	
-  	private void setParent(HeapNode parent) {
+  	void setParent(HeapNode parent) {
   		this.parent = parent;
   	  }
 

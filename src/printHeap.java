@@ -1,10 +1,9 @@
-package Heap;
 // By Elad Feldman 19/12/20
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class printHeap {
+public class printHeap extends FibonacciHeap {
     public static void main(String[] args)  {
         FibonacciHeap h1 = new FibonacciHeap();
          insertN(h1,30);
@@ -13,10 +12,6 @@ public class printHeap {
         printHeapFib(h1);
 
     }
-
-
-
-
 
     public static  void printHeapFib(FibonacciHeap heap) {
         System.out.println("-----------------------------------------------");
@@ -43,11 +38,11 @@ public class printHeap {
             HeapNode temp = node;
             do {
                 list[level] += temp.getKey();
-                HeapNode k = temp.getChild();
+                HeapNode k = temp.getFirstChild();
                 printHeapFib(k, list, level + 1);
 
                 list[level] +=getChain("=");
-                temp = temp.getNextNode();
+                temp = temp.getNextBro();
             } while (temp != node);
             list[level] += ")";
         }
