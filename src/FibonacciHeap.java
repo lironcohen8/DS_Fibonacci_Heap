@@ -130,7 +130,7 @@ public class FibonacciHeap
     }
 
     /**
-     * private vois clearHeap()
+     * private void clearHeap()
      *
      * The method clears the attributes of the heap. 
      */
@@ -193,6 +193,33 @@ public class FibonacciHeap
     }
     
     /**
+     * private FibonacciHeap removeMin()
+     *
+     * The method removes the min node and returns a heap 
+     * that contains the subtrees of the min node.
+     *
+     */
+    private FibonacciHeap removeMin() {
+    	HeapNode min = this.min;
+    	int minRank = min.getRank();
+    	min.getPrevBro().setNextBro(min.getNextBro()); // skipping min in brothers list
+    	min.getNextBro().setPrevBro(min.getPrevBro()); // skipping min in brothers list
+    	HeapNode firstChild = min.getFirstChild();
+    	
+    	if (this.min == this.first)
+    		this.first = this.first.getNextBro();
+    	min = null;
+    	this.min = this.first; // dummy, will be updated in updateMin
+    	
+    	FibonacciHeap heap2 = new FibonacciHeap();
+    	heap2.first = firstChild;
+    	heap2.min = firstChild; // dummy, will be updated in updateMin
+    	heap2.size = (int) Math.pow(2, minRank) - 1;
+    	return heap2;
+    	
+    }
+    
+    /**
      * private void updateMin()
      *
      * The method iterates over the heap's roots 
@@ -209,27 +236,6 @@ public class FibonacciHeap
     		}
     		cur = cur.getNextBro();
     	}
-    }
-    
-    /**
-     * private FibonacciHeap removeMin()
-     *
-     * The method removes the min node and returns a heap 
-     * that contains the subtrees of the min node.
-     *
-     */
-    private FibonacciHeap removeMin() {
-    	HeapNode min = this.min;
-    	min.getPrevBro().setNextBro(min.getNextBro()); // skipping min in brothers list
-    	min.getNextBro().setPrevBro(min.getPrevBro()); // skipping min in brothers list
-    	HeapNode firstChild = min.getFirstChild();
-    	
-    	FibonacciHeap heap2 = new FibonacciHeap();
-    	heap2.first = firstChild;
-    	heap2.min = firstChild; // dummy, will be updated in updateMin
-    	heap2.size = (int) Math.pow(2, min.getRank()) - 1;
-    	return heap2;
-    	
     }
     
    /**
