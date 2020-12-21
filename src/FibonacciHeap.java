@@ -8,6 +8,7 @@
  */
 public class FibonacciHeap
 {
+	protected final double GOLDEN_RATIO = (1 + Math.sqrt(5))/2;
 	protected HeapNode min;
 	protected HeapNode first;
 	protected int size;
@@ -71,6 +72,35 @@ public class FibonacciHeap
     }
     
     /**
+     * private HeapNode insertTree(int key)
+     *
+     * Inserts the given node (or tree) into the heap, as last tree.
+     *  
+     * Returns the given HeapNode;
+     */
+     private HeapNode insertTree(HeapNode x)
+     {    
+     	
+     	if (this.isEmpty()) {
+     		this.first = x;
+     		this.min = x;
+     	}
+     	
+     	else {
+     		x.setPrevBro(this.first.getPrevBro()); // next of last
+     		this.first.getPrevBro().setNextBro(x); // next of last
+     		x.setNextBro(this.first); // prev of first
+     		this.first.setPrevBro(x); // prev of first
+     		if (x.getKey() < this.min.getKey())
+         		this.min = x;
+     	}
+     	
+     	this.size += Math.pow(2, this.first.getRank());
+     
+     	return x;
+     }
+    
+    /**
      * private HeapNode link(HeapNode x, HeapNode y)()
      *
      * The method creates a simple link between 
@@ -99,6 +129,69 @@ public class FibonacciHeap
     	return x;
     }
 
+    /**
+     * private vois clearHeap()
+     *
+     * The method clears the attributes of the heap. 
+     */
+    private void clearHeap() {
+    	this.first = null;
+    	this.min = null;
+    	this.size = 0;
+    }
+    
+    /**
+     * private HeapNode[] toBuckets()
+     *
+     * The method organises the trees of the heap in buckets 
+     * and creates the links if necessary.
+     * After running this method, the heap will have at most
+     * one tree from any order.
+     * The method returns an array of the trees, ordered by order.
+     */
+    private HeapNode[] toBuckets() {
+    	HeapNode x = this.first;
+    	int arraySize = (int) Math.ceil(Math.log(this.size())/ Math.log(GOLDEN_RATIO));
+    	HeapNode[] B = new HeapNode[arraySize];
+    	x.getPrevBro().setNextBro(null); // disconnecting x from the brothers cyclic list
+    	x.setPrevBro(null);
+    	while (x != null) {
+    		HeapNode y = x; // variable for the node in buckets
+    		x = x.getNextBro();
+    		while (B[y.getRank()] != null) {
+    			y = link(y, B[y.getRank()]); // linking y with tree in bucket
+    			y.setRank(y.getRank()+1); // incrementing rank
+    		}
+    		B[y.getRank()] = y; 
+    	}
+    	return B; // buckets list
+    }
+    
+    /**
+     * private void fromBuckets()
+     *
+     * The method gets an array of tree and inserts them to the heap
+     * left to right. 
+     */
+    private void fromBuckets(HeapNode[] B) {
+    	clearHeap();
+       	for (int i=0; i<B.length; i++) { // scanning the buckets array
+    		if (B[i] != null)
+    			this.insertTree(B[i]);
+    		}
+    }
+    
+    /**
+     * private void consolidate()
+     *
+     * The method changes the heap to fulfil the rule
+     * of at most one tree from any order.
+     */
+    private void consolidate() {
+    	HeapNode[] B = toBuckets();
+    	fromBuckets(B);
+    }
+    
    /**
     * public void deleteMin()
     *
