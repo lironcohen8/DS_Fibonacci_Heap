@@ -192,6 +192,46 @@ public class FibonacciHeap
     	fromBuckets(B);
     }
     
+    /**
+     * private void updateMin()
+     *
+     * The method iterates over the heap's roots 
+     * and updates the min node of the heap.
+     *
+     */
+    private void updateMin() {
+    	int min = this.first.getKey();
+    	HeapNode cur = this.first.getNextBro();
+    	while (cur != this.first) {
+    		if (cur.getKey() < min) {
+    			this.min = cur;
+    			min = cur.getKey();
+    		}
+    		cur = cur.getNextBro();
+    	}
+    }
+    
+    /**
+     * private FibonacciHeap removeMin()
+     *
+     * The method removes the min node and returns a heap 
+     * that contains the subtrees of the min node.
+     *
+     */
+    private FibonacciHeap removeMin() {
+    	HeapNode min = this.min;
+    	min.getPrevBro().setNextBro(min.getNextBro()); // skipping min in brothers list
+    	min.getNextBro().setPrevBro(min.getPrevBro()); // skipping min in brothers list
+    	HeapNode firstChild = min.getFirstChild();
+    	
+    	FibonacciHeap heap2 = new FibonacciHeap();
+    	heap2.first = firstChild;
+    	heap2.min = firstChild; // dummy, will be updated in updateMin
+    	heap2.size = (int) Math.pow(2, min.getRank()) - 1;
+    	return heap2;
+    	
+    }
+    
    /**
     * public void deleteMin()
     *
@@ -200,8 +240,11 @@ public class FibonacciHeap
     */
     public void deleteMin()
     {
-     	return; // should be replaced by student code
-     	
+    	FibonacciHeap heap2 = removeMin();
+    	this.meld(heap2);
+    	consolidate();
+    	updateMin();
+    	this.size = this.size() - 1;
     }
 
    /**
