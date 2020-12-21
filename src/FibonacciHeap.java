@@ -215,6 +215,8 @@ public class FibonacciHeap
     	heap2.first = firstChild;
     	heap2.min = firstChild; // dummy, will be updated in updateMin
     	heap2.size = (int) Math.pow(2, minRank) - 1;
+    	
+    	this.size = this.size() - (int) Math.pow(2, minRank);
     	return heap2;
     	
     }
@@ -250,7 +252,6 @@ public class FibonacciHeap
     	this.meld(heap2);
     	consolidate();
     	updateMin();
-    	this.size = this.size() - 1;
     }
 
    /**
