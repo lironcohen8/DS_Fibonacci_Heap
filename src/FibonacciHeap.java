@@ -347,12 +347,14 @@ public class FibonacciHeap
      *
      */
     private void cascadingCut(HeapNode x, HeapNode y) {
-    	cut(x,y);
-    	if (y.getParent() != null) { // y is not the root
-    		if (y.getMark() == 0) // if y wasn't marked
-    			y.setMark(1);
-    		else
-    			cascadingCut(y, y.getParent());
+    	if (y != null ) { // if x isn't the root of the tree
+	    	cut(x,y);
+	    	if (y.getParent() != null) { // y is not the root
+	    		if (y.getMark() == 0) // if y wasn't marked
+	    			y.setMark(1);
+	    		else
+	    			cascadingCut(y, y.getParent());
+	    	}
     	}
     }
 
@@ -364,7 +366,9 @@ public class FibonacciHeap
     */
     public void decreaseKey(HeapNode x, int delta)
     {    
-    	return; // should be replaced by student code
+    	x.setKey(x.getKey()-delta); // updating x's key
+    	cascadingCut(x, x.getParent());
+    	
     }
 
    /**
