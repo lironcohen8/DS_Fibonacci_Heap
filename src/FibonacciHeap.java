@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+
 // Liron Cohen, lironcohen3, 207481268
 // Yuval Mor, yuvalmor, 209011543
 
@@ -450,9 +452,36 @@ public class FibonacciHeap
     * You are not allowed to change H.
     */
     public static int[] kMin(FibonacciHeap H, int k)
-    {    
-        int[] arr = new int[42];
-        return arr; // should be replaced by student code
+    {   
+    	int index = 1;
+    	HeapNode curParent = H.first;
+    	int[] arr = new int[k];
+    	arr[0] = H.first.getKey();
+        LinkedList<HeapNode> lst = new LinkedList<HeapNode>();
+        HeapNode curMin = curParent.getFirstChild();
+        
+        while (index<k) { // O(k)
+        	if (curParent.getFirstChild() != null) {
+		        lst.add(curParent.getFirstChild());
+		        HeapNode cur = curParent.getFirstChild().getNextBro();
+		    	while (cur != curParent.getFirstChild()) { // <=deg(H)
+		    		lst.add(cur);
+		    		cur = cur.getNextBro();
+		    	}
+        	}
+	    	
+	    	for (HeapNode node : lst) { // <= 2deg(H)?
+	    		if (node.getKey() < curMin.getKey())
+	    			curMin = node;
+	    		}
+	    	
+	    	arr[index] = curMin.getKey();
+	    	lst.remove(curMin);	
+	    	curParent = curMin;
+	    	index++;
+        }
+        
+        return arr;
     }
     
    /**
