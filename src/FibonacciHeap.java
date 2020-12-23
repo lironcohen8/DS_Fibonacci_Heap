@@ -320,6 +320,41 @@ public class FibonacciHeap
     	this.decreaseKey(x, Integer.MAX_VALUE);
     	this.deleteMin();
     }
+    
+    /**
+     * private void cut(HeapNode x, HeapNode y)
+     *
+     * Cuts x from its parent, y.
+     *
+     */
+    private void cut(HeapNode x, HeapNode y) {
+    	x.setParent(null);
+    	x.setMark(0);
+    	y.setRank(y.getRank()-1); // y has one less child
+    	if (x.getNextBro().equals(x)) // if x was an only child
+    		y.setFirstChild(null);
+    	else {
+    		y.setFirstChild(x.getNextBro()); // second child is first child
+    		x.getPrevBro().setNextBro(x.getNextBro()); // deleting x from y's children list
+    		x.getNextBro().setPrevBro(x.getPrevBro()); // deleting x from y's children list
+    	}
+    }
+    
+    /**
+     * private void cascadingCut(HeapNode x, HeapNode y)
+     *
+     * Cuts x from its parent, y. If needed, keeps cutting until gets to an unmarked parent.
+     *
+     */
+    private void cascadingCut(HeapNode x, HeapNode y) {
+    	cut(x,y);
+    	if (y.getParent() != null) { // y is not the root
+    		if (y.getMark() == 0) // if y wasn't marked
+    			y.setMark(1);
+    		else
+    			cascadingCut(y, y.getParent());
+    	}
+    }
 
    /**
     * public void decreaseKey(HeapNode x, int delta)
