@@ -9,9 +9,13 @@
 public class FibonacciHeap
 {
 	protected static final double GOLDEN_RATIO = (1 + Math.sqrt(5))/2;
+	protected static int totalLinks;
+	protected static int totalCuts;
 	protected HeapNode min;
 	protected HeapNode first;
 	protected int size;
+	protected int treeNum;
+	protected int markedNum;
 	
 	/**
 	 * public FibonacciHeap()
@@ -25,6 +29,8 @@ public class FibonacciHeap
 		this.min = null;
 		this.first = null;
 		this.size = 0;
+		this.treeNum = 0;
+		this.markedNum = 0;
 	}
 	
 	
@@ -55,7 +61,6 @@ public class FibonacciHeap
     	
     	if (this.isEmpty())
     		this.min = newFirst;
-    	
     	else {
     		this.first.prevBro.setNextBro(newFirst); // next of last
     		newFirst.setPrevBro(this.first.prevBro); // prev of new first 
@@ -67,6 +72,7 @@ public class FibonacciHeap
     	
     	this.first = newFirst;
     	this.size++;
+    	this.treeNum++;
     
     	return newFirst;
     }
@@ -96,7 +102,8 @@ public class FibonacciHeap
      	}
      	
      	this.size += Math.pow(2, this.first.getRank());
-     
+     	
+     	this.treeNum++;
      	return x;
      }
     
@@ -126,6 +133,8 @@ public class FibonacciHeap
     	x.setFirstChild(y);
     	y.setParent(x);
     	
+    	this.treeNum--;
+    	totalLinks++;
     	return x;
     }
 
@@ -138,6 +147,8 @@ public class FibonacciHeap
     	this.first = null;
     	this.min = null;
     	this.size = 0;
+    	this.markedNum = 0;
+    	this.treeNum = 0;
     }
     
     /**
@@ -201,6 +212,8 @@ public class FibonacciHeap
      */
     private FibonacciHeap removeMin() {
     	HeapNode min = this.min;
+    	if (min.getMark() == 1)
+    		this.markedNum--;
     	int minRank = min.getRank();
     	min.getPrevBro().setNextBro(min.getNextBro()); // skipping min in brothers list
     	min.getNextBro().setPrevBro(min.getPrevBro()); // skipping min in brothers list
@@ -215,11 +228,38 @@ public class FibonacciHeap
     	heap2.first = firstChild;
     	heap2.min = firstChild; // dummy, will be updated in updateMin
     	heap2.size = (int) Math.pow(2, minRank) - 1;
+    	heap2.treeNum = minRank;
     	
+
+    	this.treeNum--;
     	this.size = this.size() - (int) Math.pow(2, minRank);
+    	
     	return heap2;
     	
     }
+    
+    /**
+     * public void meld (FibonacciHeap heap2)
+     *
+     * Meld the heap with heap2
+     *
+     */
+     public void meld (FibonacciHeap heap2)
+     {
+     	  if (heap2.findMin().getKey() < this.findMin().getKey()) // updating min if necessary
+     		  this.min = heap2.findMin();
+     	  
+     	  HeapNode heap2Last = heap2.first.prevBro;
+     	  HeapNode thisLast = this.first.prevBro;
+     	  thisLast.setNextBro(heap2.first); // this last and heap2 first
+     	  heap2.first.setPrevBro(thisLast); // this last and heap2 first
+     	  heap2Last.setNextBro(this.first); // heap2 last and this first
+     	  this.first.setPrevBro(heap2Last); // heap2 last and this first
+     	  
+     	  this.size = this.size + heap2.size(); // updating size
+     	  this.markedNum += heap2.markedNum;
+     	  this.treeNum += heap2.treeNum;
+     }
     
     /**
      * private void updateMin()
@@ -264,27 +304,7 @@ public class FibonacciHeap
     {
     	return this.min;// should be replaced by student code
     } 
-    
-   /**
-    * public void meld (FibonacciHeap heap2)
-    *
-    * Meld the heap with heap2
-    *
-    */
-    public void meld (FibonacciHeap heap2)
-    {
-    	  if (heap2.findMin().getKey() < this.findMin().getKey()) // updating min if necessary
-    		  this.min = heap2.findMin();
-    	  
-    	  HeapNode heap2Last = heap2.first.prevBro;
-    	  HeapNode thisLast = this.first.prevBro;
-    	  thisLast.setNextBro(heap2.first); // this last and heap2 first
-    	  heap2.first.setPrevBro(thisLast); // this last and heap2 first
-    	  heap2Last.setNextBro(this.first); // heap2 last and this first
-    	  this.first.setPrevBro(heap2Last); // heap2 last and this first
-    	  
-    	  this.size = this.size + heap2.size(); // updating size
-    }
+   
 
    /**
     * public int size()
@@ -329,7 +349,10 @@ public class FibonacciHeap
      */
     private void cut(HeapNode x, HeapNode y) {
     	x.setParent(null);
-    	x.setMark(0);
+    	if (x.getMark() == 1) {
+    		x.setMark(0);
+    		this.markedNum--;
+    	}
     	y.setRank(y.getRank()-1); // y has one less child
     	if (x.getNextBro().equals(x)) // if x was an only child
     		y.setFirstChild(null);
@@ -339,6 +362,7 @@ public class FibonacciHeap
     		x.getNextBro().setPrevBro(x.getPrevBro()); // deleting x from y's children list
     	}
     	this.insertTree(x);
+    	totalCuts++;    	
     }
     
     /**
@@ -350,8 +374,10 @@ public class FibonacciHeap
     private void cascadingCut(HeapNode x, HeapNode y) {
 	    cut(x,y);
 	    if (y.getParent() != null) { // y is not the root
-	    	if (y.getMark() == 0) // if y wasn't marked
+	    	if (y.getMark() == 0) {// if y wasn't marked
 	    		y.setMark(1);
+	    		this.markedNum++;
+	    	}
 	    	else
 	    		cascadingCut(y, y.getParent());
     	}
@@ -382,7 +408,7 @@ public class FibonacciHeap
     */
     public int potential() 
     {    
-    	return 0; // should be replaced by student code
+    	return this.treeNum + 2*this.markedNum;
     }
 
    /**
@@ -395,7 +421,7 @@ public class FibonacciHeap
     */
     public static int totalLinks()
     {    
-    	return 0; // should be replaced by student code
+    	return totalLinks;
     }
 
    /**
@@ -406,7 +432,7 @@ public class FibonacciHeap
     */
     public static int totalCuts()
     {    
-    	return 0; // should be replaced by student code
+    	return totalCuts;
     }
 
      /**
