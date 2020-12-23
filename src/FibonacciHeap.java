@@ -9,8 +9,8 @@
 public class FibonacciHeap
 {
 	protected static final double GOLDEN_RATIO = (1 + Math.sqrt(5))/2;
-	protected static int totalLinks;
-	protected static int totalCuts;
+	protected static int totalLinks = 0;
+	protected static int totalCuts = 0;
 	protected HeapNode min;
 	protected HeapNode first;
 	protected int size;
