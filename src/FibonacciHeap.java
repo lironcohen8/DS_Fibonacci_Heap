@@ -325,8 +325,15 @@ public class FibonacciHeap
     */
     public int[] countersRep()
     {
-	int[] arr = new int[42];
-        return arr; //	 to be replaced by student code
+    	int arraySize = (int) Math.ceil(Math.log(this.size())/ Math.log(GOLDEN_RATIO)); // calculating array size
+    	int[] arr = new int[arraySize];
+    	arr[this.first.getRank()]++;
+    	HeapNode cur = this.first.getNextBro();
+    	while (cur != this.first) { // iterating over roots and counting by their ranks
+    		arr[cur.getRank()]++;
+    		cur = cur.getNextBro();
+    	}
+        return arr; 
     }
 	
    /**
