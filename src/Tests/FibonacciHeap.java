@@ -90,12 +90,10 @@ public class FibonacciHeap
      */
      private HeapNode insertTree(HeapNode x)
      {    
-     	
      	if (this.isEmpty()) {
      		this.first = x;
      		this.min = x;
      	}
-     	
      	else {
      		x.setPrevBro(this.first.getPrevBro()); // next of last
      		this.first.getPrevBro().setNextBro(x); // next of last
@@ -103,10 +101,10 @@ public class FibonacciHeap
      		this.first.setPrevBro(x); // prev of first
      		if (x.getKey() < this.min.getKey())
          		this.min = x;
+     		this.first = x;
      	}
      	
      	this.size += Math.pow(2, this.first.getRank());
-     	
      	this.treeNum++;
      	return x;
      }
@@ -124,15 +122,15 @@ public class FibonacciHeap
     		y = x;
     		x = temp;
     	}
-    	if (x.getFirstChild() == null) { // if x doesn't hasve children
+    	if (x.getFirstChild() == null) { // if x doesn't have children
     		y.setNextBro(y);
     		y.setPrevBro(y);
     	}
     	else {
-    		y.setNextBro(x.getFirstChild()); // old first child to y
-    		x.getFirstChild().setPrevBro(y); // old first child to y
     		y.setPrevBro(x.getFirstChild().getPrevBro());//old last child to y
     		x.getFirstChild().getPrevBro().setNextBro(y);// old last child to y
+    		y.setNextBro(x.getFirstChild()); // old first child to y
+    		x.getFirstChild().setPrevBro(y); // old first child to y
     	}
     	x.setFirstChild(y);
     	y.setParent(x);
@@ -151,7 +149,6 @@ public class FibonacciHeap
     	this.first = null;
     	this.min = null;
     	this.size = 0;
-    	this.markedNum = 0;
     	this.treeNum = 0;
     }
     
@@ -165,19 +162,24 @@ public class FibonacciHeap
      * The method returns an array of the trees, ordered by order.
      */
     private HeapNode[] toBuckets() {
+    	if (this.isEmpty())
+    		return new HeapNode[0];
     	HeapNode x = this.first;
-    	int arraySize = (int) Math.ceil(Math.log(this.size())/ Math.log(GOLDEN_RATIO));
+    	int arraySize = Math.max(1, (int) Math.ceil(Math.log(this.size())/ Math.log(GOLDEN_RATIO)));
     	HeapNode[] B = new HeapNode[arraySize];
     	x.getPrevBro().setNextBro(null); // disconnecting x from the brothers cyclic list
     	x.setPrevBro(null);
     	while (x != null) {
     		HeapNode y = x; // variable for the node in buckets
     		x = x.getNextBro();
+    		y.setPrevBro(y);
+    		y.setNextBro(y);
     		while (B[y.getRank()] != null) {
     			y = link(y, B[y.getRank()]); // linking y with tree in bucket
     			y.setRank(y.getRank()+1); // incrementing rank
+    			B[y.getRank()-1] = null;
     		}
-    		B[y.getRank()] = y; 
+    		B[y.getRank()] = y;
     	}
     	return B; // buckets list
     }
@@ -215,25 +217,30 @@ public class FibonacciHeap
      *
      */
     private FibonacciHeap removeMin() {
-    	HeapNode min = this.min;
-    	if (min.getMark() == 1)
+    	HeapNode minNode = this.min;
+    	if (minNode.getMark() == 1)
     		this.markedNum--;
-    	int minRank = min.getRank();
-    	min.getPrevBro().setNextBro(min.getNextBro()); // skipping min in brothers list
-    	min.getNextBro().setPrevBro(min.getPrevBro()); // skipping min in brothers list
-    	HeapNode firstChild = min.getFirstChild();
+    	int minRank = minNode.getRank();
+    	minNode.getPrevBro().setNextBro(minNode.getNextBro()); // skipping min in brothers list
+    	minNode.getNextBro().setPrevBro(minNode.getPrevBro()); // skipping min in brothers list
+    	HeapNode firstChild = minNode.getFirstChild();
     	
-    	if (this.min == this.first)
-    		this.first = this.first.getNextBro();
-    	min = null;
+    	if (minNode == this.first) {
+    		if (minNode.getNextBro() == minNode)
+    			this.first = null;
+    		else
+    			this.first = this.first.getNextBro();
+    	}
     	this.min = this.first; // dummy, will be updated in updateMin
+    	minNode = null;
     	
     	FibonacciHeap heap2 = new FibonacciHeap();
-    	heap2.first = firstChild;
-    	heap2.min = firstChild; // dummy, will be updated in updateMin
-    	heap2.size = (int) Math.pow(2, minRank) - 1;
-    	heap2.treeNum = minRank;
-    	
+    	if (firstChild != null) {
+	    	heap2.first = firstChild;
+	    	heap2.min = firstChild; // dummy, will be updated in updateMin
+	    	heap2.size = (int) Math.pow(2, minRank) - 1;
+	    	heap2.treeNum = minRank;
+    	}
 
     	this.treeNum--;
     	this.size = this.size() - (int) Math.pow(2, minRank);
@@ -250,19 +257,28 @@ public class FibonacciHeap
      */
      public void meld (FibonacciHeap heap2)
      {
-     	  if (heap2.findMin().getKey() < this.findMin().getKey()) // updating min if necessary
-     		  this.min = heap2.findMin();
-     	  
-     	  HeapNode heap2Last = heap2.first.prevBro;
-     	  HeapNode thisLast = this.first.prevBro;
-     	  thisLast.setNextBro(heap2.first); // this last and heap2 first
-     	  heap2.first.setPrevBro(thisLast); // this last and heap2 first
-     	  heap2Last.setNextBro(this.first); // heap2 last and this first
-     	  this.first.setPrevBro(heap2Last); // heap2 last and this first
-     	  
-     	  this.size = this.size + heap2.size(); // updating size
-     	  this.markedNum += heap2.markedNum;
-     	  this.treeNum += heap2.treeNum;
+    	 if (this.isEmpty()) {
+    		this.first = heap2.first;
+    		this.min = heap2.min;
+    		this.size = heap2.size;
+    		this.markedNum = heap2.markedNum;
+    		this.treeNum = heap2.treeNum;
+    	 }
+    	 else if (!heap2.isEmpty()) {
+	     	  if (heap2.findMin().getKey() < this.findMin().getKey()) // updating min if necessary
+	     		  this.min = heap2.findMin();
+	     	  
+	     	  HeapNode heap2Last = heap2.first.prevBro;
+	     	  HeapNode thisLast = this.first.prevBro;
+	     	  thisLast.setNextBro(heap2.first); // this last and heap2 first
+	     	  heap2.first.setPrevBro(thisLast); // this last and heap2 first
+	     	  heap2Last.setNextBro(this.first); // heap2 last and this first
+	     	  this.first.setPrevBro(heap2Last); // heap2 last and this first
+	     	  
+	     	  this.size = this.size + heap2.size(); // updating size
+	     	  this.markedNum += heap2.markedNum;
+	     	  this.treeNum += heap2.treeNum;
+    	  }
      }
     
     /**
@@ -273,15 +289,17 @@ public class FibonacciHeap
      *
      */
     private void updateMin() {
-    	int min = this.first.getKey();
-    	HeapNode cur = this.first.getNextBro();
-    	while (cur != this.first) {
-    		if (cur.getKey() < min) {
-    			this.min = cur;
-    			min = cur.getKey();
-    		}
-    		cur = cur.getNextBro();
-    	}
+    	if (!this.isEmpty()) {
+	    	int min = this.first.getKey();
+	    	HeapNode cur = this.first.getNextBro();
+	    	while (cur != this.first) {
+	    		if (cur.getKey() < min) {
+	    			this.min = cur;
+	    			min = cur.getKey();
+	    		}
+	    		cur = cur.getNextBro();
+	    	}
+	    }
     }
     
    /**
@@ -329,7 +347,7 @@ public class FibonacciHeap
     */
     public int[] countersRep()
     {
-    	int arraySize = (int) Math.ceil(Math.log(this.size())/ Math.log(GOLDEN_RATIO)); // calculating array size
+    	int arraySize = Math.max(1, (int) Math.ceil(Math.log(this.size())/ Math.log(GOLDEN_RATIO)));
     	int[] arr = new int[arraySize];
     	arr[this.first.getRank()]++;
     	HeapNode cur = this.first.getNextBro();
