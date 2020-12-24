@@ -1,5 +1,6 @@
 package Tests;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 // Liron Cohen, lironcohen3, 207481268
@@ -390,6 +391,7 @@ public class FibonacciHeap
     		x.getPrevBro().setNextBro(x.getNextBro()); // deleting x from y's children list
     		x.getNextBro().setPrevBro(x.getPrevBro()); // deleting x from y's children list
     	}
+    	this.size -= Math.pow(2, x.getRank());
     	this.insertTree(x);
     	totalCuts++;    	
     }
