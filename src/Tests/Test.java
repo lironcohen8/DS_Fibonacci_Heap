@@ -744,10 +744,10 @@ public class Test {
         int links = FibonacciHeap.totalLinks();
 
         fibonacciHeap.decreaseKey(node6, 2);
-        fibonacciHeap.decreaseKey(node5, 1);
+        fibonacciHeap.decreaseKey(node5, 4);
 
-        if (fibonacciHeap.potential() != 4 ||
-                FibonacciHeap.totalCuts() - cuts != 1 ||
+        if (fibonacciHeap.potential() != 3 ||
+                FibonacciHeap.totalCuts() - cuts != 2 ||
                 FibonacciHeap.totalLinks() - links != 0) {
             bugFound(test);
         }
