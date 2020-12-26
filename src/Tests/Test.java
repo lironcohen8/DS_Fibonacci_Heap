@@ -350,18 +350,18 @@ public class Test {
         }
 
         for (int i = 2000; i < 2500; i++) {
-        	System.out.println(i);
-        	System.out.println("heap " + heap.size());
-        	System.out.println("ours " + fibonacciHeap.size());
+        	//System.out.println(i);
+        	//System.out.println("heap " + heap.size());
+        	//System.out.println("ours " + fibonacciHeap.size());
             if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
-            	System.out.println(i + " is not okay");
-            	System.out.println("heap " + heap.size());
-            	System.out.println("ours " + fibonacciHeap.size());
+            	//System.out.println(i + " is not okay");
+            	//System.out.println("heap " + heap.size());
+            	//System.out.println("ours " + fibonacciHeap.size());
                 bugFound(test);
                 return;
             }
             heap.delete(i);
-        	System.out.println("outside " +Arrays.toString(fibonacciHeap.countersRep()));
+        	//System.out.println("outside " +Arrays.toString(fibonacciHeap.countersRep()));
             fibonacciHeap.delete(nodes.get(i - 2000));
         }
 

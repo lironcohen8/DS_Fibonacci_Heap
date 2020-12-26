@@ -50,7 +50,7 @@ public class FibonacciHeap
     */
     public boolean isEmpty()
     {
-    	return this.size == 0; // should be replaced by student code
+    	return this.first == null;
     }
 		
    /**
@@ -104,8 +104,6 @@ public class FibonacciHeap
          		this.min = x;
      		this.first = x;
      	}
-     	
-     	this.size += Math.pow(2, this.first.getRank());
      	this.treeNum++;
      	return x;
      }
@@ -149,7 +147,7 @@ public class FibonacciHeap
     private void clearHeap() {
     	this.first = null;
     	this.min = null;
-    	this.size = 0;
+    	//this.size = 0;
     	this.treeNum = 0;
     }
     
@@ -239,15 +237,13 @@ public class FibonacciHeap
     	if (firstChild != null) {
 	    	heap2.first = firstChild;
 	    	heap2.min = firstChild; // dummy, will be updated in updateMin
-	    	heap2.size = (int) Math.pow(2, minRank) - 1;
 	    	heap2.treeNum = minRank;
     	}
 
     	this.treeNum--;
-    	this.size = this.size() - (int) Math.pow(2, minRank);
+    	this.size--;
     	
     	return heap2;
-    	
     }
     
     /**
@@ -261,11 +257,11 @@ public class FibonacciHeap
     	 if (this.isEmpty()) {
     		this.first = heap2.first;
     		this.min = heap2.min;
-    		this.size = heap2.size;
+    		this.size = this.size + heap2.size;
     		this.markedNum = heap2.markedNum;
     		this.treeNum = heap2.treeNum;
     	 }
-    	 else if (!heap2.isEmpty()) {
+    	 else if (!heap2.isEmpty()){
 	     	  if (heap2.findMin().getKey() < this.findMin().getKey()) // updating min if necessary
 	     		  this.min = heap2.findMin();
 	     	  
@@ -325,7 +321,7 @@ public class FibonacciHeap
     */
     public HeapNode findMin()
     {
-    	return this.min;// should be replaced by student code
+    	return this.min;
     } 
    
 
@@ -337,7 +333,7 @@ public class FibonacciHeap
     */
     public int size()
     {
-    	return this.size; // should be replaced by student code
+    	return this.size; 
     }
     	
     /**
@@ -391,7 +387,6 @@ public class FibonacciHeap
     		x.getPrevBro().setNextBro(x.getNextBro()); // deleting x from y's children list
     		x.getNextBro().setPrevBro(x.getPrevBro()); // deleting x from y's children list
     	}
-    	this.size -= Math.pow(2, x.getRank());
     	this.insertTree(x);
     	totalCuts++;    	
     }
