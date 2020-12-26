@@ -418,10 +418,12 @@ public class FibonacciHeap
     public void decreaseKey(HeapNode x, int delta)
     {    
     	x.setKey(x.getKey()-delta); // updating x's key
-    	if (x.getKey() < this.min.getKey())
-    		this.min = x;
-    	if (x.getParent() != null) // if x isn't the root of the tree
-    		cascadingCut(x, x.getParent());
+    	if (x != this.min) {
+	    	if (x.getKey() < this.min.getKey())
+	    		this.min = x;
+	    	if (x.getParent() != null) // if x isn't the root of the tree
+	    		cascadingCut(x, x.getParent());
+    	}
     	
     }
 

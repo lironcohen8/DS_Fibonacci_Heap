@@ -376,7 +376,7 @@ public class Test {
         if (!fibonacciHeap.isEmpty())
             bugFound(test);
     }
-
+    
     static void test8() {
         String test = "test8";
         heap = new Heap();
@@ -393,7 +393,7 @@ public class Test {
 
         for (int i = 2000; i < 2500; i++) {
             if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
-                bugFound(test);
+            	bugFound(test);
                 return;
             }
             heap.delete(i);
