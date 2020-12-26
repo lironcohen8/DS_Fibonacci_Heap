@@ -19,8 +19,8 @@ public class FibonacciHeap
 	protected HeapNode min;
 	protected HeapNode first;
 	protected int size;
-	protected int treeNum;
-	protected int markedNum;
+	public int treeNum;
+	public int markedNum;
 	
 	/**
 	 * public FibonacciHeap()
@@ -257,9 +257,6 @@ public class FibonacciHeap
     	 if (this.isEmpty()) {
     		this.first = heap2.first;
     		this.min = heap2.min;
-    		this.size = this.size + heap2.size;
-    		this.markedNum = heap2.markedNum;
-    		this.treeNum = heap2.treeNum;
     	 }
     	 else if (!heap2.isEmpty()){
 	     	  if (heap2.findMin().getKey() < this.findMin().getKey()) // updating min if necessary
@@ -272,10 +269,11 @@ public class FibonacciHeap
 	     	  heap2Last.setNextBro(this.first); // heap2 last and this first
 	     	  this.first.setPrevBro(heap2Last); // heap2 last and this first
 	     	  
-	     	  this.size = this.size + heap2.size(); // updating size
-	     	  this.markedNum += heap2.markedNum;
-	     	  this.treeNum += heap2.treeNum;
     	  }
+    	 
+    	  this.size += heap2.size(); // updating size
+    	  this.markedNum += heap2.markedNum;
+    	  this.treeNum += heap2.treeNum;
      }
     
     /**

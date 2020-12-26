@@ -748,8 +748,9 @@ public class Test {
 
         if (fibonacciHeap.potential() != 4 ||
                 FibonacciHeap.totalCuts() - cuts != 1 ||
-                FibonacciHeap.totalLinks() - links != 0)
+                FibonacciHeap.totalLinks() - links != 0) {
             bugFound(test);
+        }
     }
 
     static void test21() {
@@ -969,8 +970,10 @@ public class Test {
         }
         fibonacciHeap.deleteMin();
         int[] kmin = FibonacciHeap.kMin(fibonacciHeap, 10);
+        System.out.println(Arrays.toString(kmin));
         for (int i = 0; i < kmin.length; i++) {
             if (kmin[i] != i + 1) {
+            	System.out.println("error in test29");
                 grade -= 8;
                 return;
             }
@@ -991,6 +994,7 @@ public class Test {
             FibonacciHeap.HeapNode min = firstFibonacciHeap.findMin();
             int minValue = min.getKey();
             if (minValue != i) {
+            	System.out.println("error in test30");
                 grade -= 8;
             }
             firstFibonacciHeap.deleteMin();
