@@ -611,9 +611,26 @@ public class FibonacciHeap
     	System.out.println("totalCuts: " + totalCuts);
     	System.out.println("potential: " + heap.potential());
     }
+    
+    public static void meas2() {
+    	long startTime2 = System.nanoTime();
+    	FibonacciHeap heap2 = new FibonacciHeap();
+    	int m2 = 3000;
+    	for (int j = m2; j>=0; j--) 
+    		heap2.insert(j);
+    	for (int i=0; i<m2/2; i++)
+    		heap2.deleteMin();
+    	long endTime2 = System.nanoTime();
+    	long time2 = endTime2 - startTime2;
+    	System.out.println("m = " + m2);
+    	System.out.println("run time in ms: " + time2/1000000);
+    	System.out.println("totalLinks: " + totalLinks);
+    	System.out.println("totalCuts: " + totalCuts);
+    	System.out.println("potential: " + heap2.potential());
+    }
 
     public static void main (String[] args) {
-    	meas1();
-    	//meas2();
+    	//meas1();
+    	meas2();
     }
 }
