@@ -590,23 +590,23 @@ public class FibonacciHeap
     	int m = (int) Math.pow(2, 10);
     	HeapNode[] arr = new HeapNode[m+1];
     	for (int j = m; j>=0; j--) {
-    		HeapNode n = new FibonacciHeap().new HeapNode(j);
-    		heap.insertTree(n);
+    		HeapNode n = heap.insert(j);
     		arr[j] = n;
     	}
     	heap.deleteMin();
-    	for (int i=0; i<= (int)Math.log(m)-1; i++) {
-    		int sum = 0;
+    	for (int i=0; i<= Math.log(m)/Math.log(2)-1; i++) {
+    		double sum = 0;
     		for (int k=1; k<=i; k++)
     			sum += Math.pow(0.5, k);
     		sum *= m;
     		sum += 2;
-    		heap.decreaseKey(arr[sum], m-1);
+    		heap.decreaseKey(arr[(int)sum], m-1);
     	}
     	heap.decreaseKey(arr[m-1], m-1);
     	long endTime = System.nanoTime();
     	long time = endTime - startTime;
-    	System.out.println(m + " run time in ms: " + time/1000000);
+    	System.out.println("m = " + m);
+    	System.out.println("run time in ms: " + time/1000000);
     	System.out.println("totalLinks: " + totalLinks);
     	System.out.println("totalCuts: " + totalCuts);
     	System.out.println("potential: " + heap.potential());
