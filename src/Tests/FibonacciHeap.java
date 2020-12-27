@@ -2,6 +2,7 @@ package Tests;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 
 // Liron Cohen, lironcohen3, 207481268
 // Yuval Mor, yuvalmor, 209011543
@@ -583,4 +584,36 @@ public class FibonacciHeap
 
     }
    
+    public static void meas1() {
+    	long startTime = System.nanoTime();
+    	FibonacciHeap heap = new FibonacciHeap();
+    	int m = (int) Math.pow(2, 10);
+    	HeapNode[] arr = new HeapNode[m+1];
+    	for (int j = m; j>=0; j--) {
+    		HeapNode n = new FibonacciHeap().new HeapNode(j);
+    		heap.insertTree(n);
+    		arr[j] = n;
+    	}
+    	heap.deleteMin();
+    	for (int i=0; i<= (int)Math.log(m)-1; i++) {
+    		int sum = 0;
+    		for (int k=1; k<=i; k++)
+    			sum += Math.pow(0.5, k);
+    		sum *= m;
+    		sum += 2;
+    		heap.decreaseKey(arr[sum], m-1);
+    	}
+    	heap.decreaseKey(arr[m-1], m-1);
+    	long endTime = System.nanoTime();
+    	long time = endTime - startTime;
+    	System.out.println(m + " run time in ms: " + time/1000000);
+    	System.out.println("totalLinks: " + totalLinks);
+    	System.out.println("totalCuts: " + totalCuts);
+    	System.out.println("potential: " + heap.potential());
+    }
+
+    public static void main (String[] args) {
+    	meas1();
+    	//meas2();
+    }
 }
