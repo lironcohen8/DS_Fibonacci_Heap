@@ -211,6 +211,8 @@ public class Test {
         addKeys(0);
         while (!heap.isEmpty()) {
             if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
+            	System.out.println("heap: " + heap.findMin());
+            	System.out.println("ours: " + fibonacciHeap.findMin().getKey());
                 bugFound(test);
                 return;
             }

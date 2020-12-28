@@ -216,35 +216,38 @@ public class FibonacciHeap
      * that contains the subtrees of the min node.
      *
      */
-    private FibonacciHeap removeMin() {
+    private void removeMin() {
     	HeapNode minNode = this.min;
     	if (minNode.getMark() == 1)
     		this.markedNum--;
-    	int minRank = minNode.getRank();
-    	minNode.getPrevBro().setNextBro(minNode.getNextBro()); // skipping min in brothers list
-    	minNode.getNextBro().setPrevBro(minNode.getPrevBro()); // skipping min in brothers list
+    	
     	HeapNode firstChild = minNode.getFirstChild();
     	
-    	if (minNode == this.first) {
-    		if (minNode.getNextBro() == minNode)
-    			this.first = null;
-    		else
-    			this.first = this.first.getNextBro();
+    	if (firstChild != null) { // if min has children
+    		if (minNode.getNextBro() == minNode) { // min is only child
+    			this.first = firstChild;
+    		}
+    		else { 
+	    		minNode.getPrevBro().setNextBro(firstChild); // min's children after its prev bro
+	    		firstChild.setPrevBro(minNode.getPrevBro()); // min's children after its prev bro
+	    		minNode.getNextBro().setPrevBro(firstChild.getPrevBro()); // min's children before its next bro
+	    		firstChild.getPrevBro().setNextBro(minNode.getNextBro()); // min's children before its next bro
+	    		if (minNode == this.first) 
+	        		this.first = firstChild;
+    		}
     	}
+    	else { // if min doesn't have children
+    		if (minNode == this.first)
+    			this.first = minNode.getNextBro();
+    		minNode.getPrevBro().setNextBro(minNode.getNextBro()); // skipping min in brothers list
+        	minNode.getNextBro().setPrevBro(minNode.getPrevBro()); // skipping min in brothers list
+    	}
+    	
     	this.min = this.first; // dummy, will be updated in updateMin
     	minNode = null;
-    	
-    	FibonacciHeap heap2 = new FibonacciHeap();
-    	if (firstChild != null) {
-	    	heap2.first = firstChild;
-	    	heap2.min = firstChild; // dummy, will be updated in updateMin
-	    	heap2.treeNum = minRank;
-    	}
 
     	this.treeNum--;
     	this.size--;
-    	
-    	return heap2;
     }
     
     /**
@@ -257,7 +260,7 @@ public class FibonacciHeap
      {
     	 if (this.isEmpty()) {
     		this.first = heap2.first;
-    		this.min = heap2.min;
+    		this.min = heap2.findMin();
     	 }
     	 else if (!heap2.isEmpty()){
 	     	  if (heap2.findMin().getKey() < this.findMin().getKey()) // updating min if necessary
@@ -306,8 +309,7 @@ public class FibonacciHeap
     */
     public void deleteMin()
     {
-    	FibonacciHeap heap2 = removeMin();
-    	this.meld(heap2);
+    	removeMin();
     	consolidate();
     	updateMin();
     }
@@ -420,7 +422,7 @@ public class FibonacciHeap
     	if (x != this.min) {
 	    	if (x.getKey() < this.min.getKey())
 	    		this.min = x;
-	    	if (x.getParent() != null) // if x isn't the root of the tree
+	    	if (x.getParent() != null && x.getKey() < x.getParent().getKey()) // if x isn't the root of the tree and heap rule is broken
 	    		cascadingCut(x, x.getParent());
     	}
     	
@@ -615,8 +617,8 @@ public class FibonacciHeap
     public static void meas2() {
     	long startTime2 = System.nanoTime();
     	FibonacciHeap heap2 = new FibonacciHeap();
-    	int m2 = 3000;
-    	for (int j = m2; j>=0; j--) 
+    	int m2 = 1000;
+    	for (int j = m2; j>0; j--) 
     		heap2.insert(j);
     	for (int i=0; i<m2/2; i++)
     		heap2.deleteMin();
