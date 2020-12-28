@@ -192,7 +192,7 @@ public class FibonacciHeap
      */
     private void fromBuckets(HeapNode[] B) {
     	clearHeap();
-       	for (int i=0; i<B.length; i++) { // scanning the buckets array
+       	for (int i=B.length-1; i>=0; i--) { // scanning the buckets array
     		if (B[i] != null)
     			this.insertTree(B[i]);
     		}
