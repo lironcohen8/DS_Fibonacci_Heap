@@ -514,7 +514,7 @@ public class FiboHeapTest {
     }
 
     public static void main(String[] args) throws Exception {
-        //System.out.println("I <3 male Guy");
+        System.out.println("I <3 male Guy");
         
         testTrees();
         System.out.println("Dankovich");
