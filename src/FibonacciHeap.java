@@ -144,7 +144,6 @@ public class FibonacciHeap
     private void clearHeap() {
     	this.first = null;
     	this.min = null;
-    	//this.size = 0;
     	this.treeNum = 0;
     }
     

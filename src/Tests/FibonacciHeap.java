@@ -227,26 +227,29 @@ public class FibonacciHeap
     		if (minNode.getNextBro() == minNode) { // min is only child
     			this.first = firstChild;
     		}
-    		else { 
+    		else {
+    			minNode.getNextBro().setPrevBro(firstChild.getPrevBro()); // min's children before its next bro
+	    		firstChild.getPrevBro().setNextBro(minNode.getNextBro()); // min's children before its next bro
 	    		minNode.getPrevBro().setNextBro(firstChild); // min's children after its prev bro
 	    		firstChild.setPrevBro(minNode.getPrevBro()); // min's children after its prev bro
-	    		minNode.getNextBro().setPrevBro(firstChild.getPrevBro()); // min's children before its next bro
-	    		firstChild.getPrevBro().setNextBro(minNode.getNextBro()); // min's children before its next bro
+	    
 	    		if (minNode == this.first) 
 	        		this.first = firstChild;
     		}
     	}
     	else { // if min doesn't have children
-    		if (minNode == this.first)
-    			this.first = minNode.getNextBro();
+    		if (minNode == this.first) {
+    			if (minNode.getNextBro() == minNode) // min is only child
+    				this.first = null;
+    			else  // min doesn't have children and has brothers
+    				this.first = minNode.getNextBro();
+    		}
     		minNode.getPrevBro().setNextBro(minNode.getNextBro()); // skipping min in brothers list
-        	minNode.getNextBro().setPrevBro(minNode.getPrevBro()); // skipping min in brothers list
+			minNode.getNextBro().setPrevBro(minNode.getPrevBro()); // skipping min in brothers list
     	}
     	
     	this.min = this.first; // dummy, will be updated in updateMin
     	minNode = null;
-
-    	this.treeNum--;
     	this.size--;
     }
     

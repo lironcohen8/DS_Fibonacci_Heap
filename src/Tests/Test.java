@@ -202,6 +202,9 @@ public class Test {
             }
             fibonacciHeap.deleteMin();
         }
+        if (!fibonacciHeap.isEmpty()) {
+        	bugFound(test);
+        }
     }
 
     static void test1() {
