@@ -975,7 +975,6 @@ public class Test {
         }
         fibonacciHeap.deleteMin();
         int[] kmin = FibonacciHeap.kMin(fibonacciHeap, 10);
-        System.out.println(Arrays.toString(kmin));
         for (int i = 0; i < kmin.length; i++) {
             if (kmin[i] != i + 1) {
             	System.out.println("error in test29");

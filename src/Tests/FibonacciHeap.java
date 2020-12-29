@@ -477,12 +477,18 @@ public class FibonacciHeap
     public static int[] kMin(FibonacciHeap H, int k)
     {   
     	int index = 1;
-    	HeapNode curParent = H.first;
+    	HeapNode curParent = H.min;
     	int[] arr = new int[k];
-    	arr[0] = H.first.getKey();
+    	arr[0] = H.min.getKey();
         LinkedList<HeapNode> lst = new LinkedList<HeapNode>();
         HeapNode curMin = curParent.getFirstChild();
         
+        HeapNode curRoot = H.min.getNextBro();
+        while (curRoot != H.min) { // inserting roots. O(deg(H))
+        	lst.add(curRoot);
+        	curRoot = curRoot.getNextBro();
+        }
+
         while (index<k) { // O(k)
         	if (curParent.getFirstChild() != null) {
 		        lst.add(curParent.getFirstChild());
@@ -493,14 +499,16 @@ public class FibonacciHeap
 		    	}
         	}
 	    	
+        	curMin = lst.getFirst();
 	    	for (HeapNode node : lst) { // <= 2deg(H)?
 	    		if (node.getKey() < curMin.getKey())
 	    			curMin = node;
 	    		}
 	    	
+	    	
 	    	arr[index] = curMin.getKey();
-	    	lst.remove(curMin);	
 	    	curParent = curMin;
+	    	lst.remove(curMin);	
 	    	index++;
         }
         
