@@ -474,7 +474,7 @@ public class FibonacciHeap
     * The function should run in O(k*deg(H)). 
     * You are not allowed to change H.
     */
-    public static int[] kMin(FibonacciHeap H, int k)
+   /* public static int[] kMinold(FibonacciHeap H, int k)
     {   
     	int index = 1;
     	HeapNode curParent = H.min;
@@ -482,12 +482,6 @@ public class FibonacciHeap
     	arr[0] = H.min.getKey();
         LinkedList<HeapNode> lst = new LinkedList<HeapNode>();
         HeapNode curMin = curParent.getFirstChild();
-        
-        HeapNode curRoot = H.min.getNextBro();
-        while (curRoot != H.min) { // inserting roots. O(deg(H))
-        	lst.add(curRoot);
-        	curRoot = curRoot.getNextBro();
-        }
 
         while (index<k) { // O(k)
         	if (curParent.getFirstChild() != null) {
@@ -513,8 +507,40 @@ public class FibonacciHeap
         }
         
         return arr;
-    }
+    }*/
+
     
+    private static void insertNodesChildren(FibonacciHeap H, HeapNode n, int k) {
+    	H.insert(n.getKey());
+    	if (k>1 && n.getFirstChild() != null){
+    		HeapNode cur = n.getFirstChild();
+    		insertNodesChildren(H, n.getFirstChild(), k-1);
+    		cur = cur.getNextBro();
+    		while (cur != n.getFirstChild()) {
+        		insertNodesChildren(H, cur, k-1);
+        		cur = cur.getNextBro();
+    		}
+    	}
+    }
+
+    /**
+   * public static int[] kMin(FibonacciHeap H, int k) 
+   *
+   * This static function returns the k minimal elements in a binomial tree H.
+   * The function should run in O(k*deg(H)). 
+   * You are not allowed to change H.
+   */
+   public static int[] kMin(FibonacciHeap H, int k)
+   {   
+	   FibonacciHeap tempH = new FibonacciHeap();
+	   int[] arr = new int[k];
+	   insertNodesChildren(tempH, H.min, k);
+	   for (int index = 0; index < k; index ++) {
+		   arr[index] = tempH.findMin().getKey();
+		   tempH.deleteMin();
+	   }
+	   return arr;
+   }    
    /**
     * public class HeapNode
     * 
