@@ -175,7 +175,7 @@ public class Test {
             System.out.println("Bug found in " + "test30");
             grade -= 8;
         }
-
+        System.out.println("done!");
         System.exit((int) grade);
     }
 
