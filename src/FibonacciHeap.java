@@ -142,7 +142,6 @@ public class FibonacciHeap
     private void clearHeap() {
     	this.first = null;
     	this.min = null;
-    	//this.size = 0;
     	this.treeNum = 0;
     }
     
@@ -361,8 +360,8 @@ public class FibonacciHeap
     */
     public void delete(HeapNode x) 
     {    
-    	this.decreaseKey(x, Integer.MAX_VALUE);
-    	this.deleteMin();
+    	decreaseKey(x, Integer.MAX_VALUE);
+    	deleteMin();
     }
     
     /**
