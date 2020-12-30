@@ -1,5 +1,3 @@
-import java.util.LinkedList;
-
 // Liron Cohen, lironcohen3, 207481268
 // Yuval Mor, yuvalmor, 209011543
 
@@ -473,30 +471,29 @@ public class FibonacciHeap
     public static int[] kMin(FibonacciHeap H, int k)
     {   
     	int index = 1;
-    	HeapNode curParent = H.first;
+    	HeapNode curParent = H.min;
     	int[] arr = new int[k];
-    	arr[0] = H.first.getKey();
-        LinkedList<HeapNode> lst = new LinkedList<HeapNode>();
+    	arr[0] = H.min.getKey();
+    	HeapNode[] nodesArr = new HeapNode[H.size()];
+        FibonacciHeap tempH = new FibonacciHeap();
         HeapNode curMin = curParent.getFirstChild();
-        
+
         while (index<k) { // O(k)
-        	if (curParent.getFirstChild() != null) {
-		        lst.add(curParent.getFirstChild());
+        	if (curParent.getFirstChild() != null) { 
+		        tempH.insert(curParent.getFirstChild().getKey());
+		        nodesArr[curParent.getFirstChild().getKey()] = curParent.getFirstChild();
 		        HeapNode cur = curParent.getFirstChild().getNextBro();
-		    	while (cur != curParent.getFirstChild()) { // <=deg(H)
-		    		lst.add(cur);
+		    	while (cur != curParent.getFirstChild()) { // O(deg(H)) 
+		    		tempH.insert(cur.getKey()); 
+			        nodesArr[cur.getKey()] = cur; 
 		    		cur = cur.getNextBro();
 		    	}
         	}
 	    	
-	    	for (HeapNode node : lst) { // <= 2deg(H)?
-	    		if (node.getKey() < curMin.getKey())
-	    			curMin = node;
-	    		}
-	    	
+        	curMin = tempH.findMin(); // has the right key but from the new heap, O(1)
 	    	arr[index] = curMin.getKey();
-	    	lst.remove(curMin);	
-	    	curParent = curMin;
+	    	curParent = nodesArr[curMin.getKey()]; //the original node from the heap H 
+	    	tempH.deleteMin(); // O(deg(H))	
 	    	index++;
         }
         
@@ -584,5 +581,4 @@ public class FibonacciHeap
   	  }
 
     }
-   
 }
