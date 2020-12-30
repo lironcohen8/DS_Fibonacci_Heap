@@ -82,6 +82,37 @@ public class FibonacciHeap
     
     	return newFirst;
     }
+
+    
+    /**
+     * public HeapNode insertLMin(heapNode n)
+     *
+     * Creates a node (of type HeapNode) which contains the given node as a kMinNode parameter, and inserts it into the heap.
+     * 
+     * Returns the new node created. 
+     */
+     private HeapNode insertKMin(HeapNode n)
+     {    
+     	HeapNode newFirst = new HeapNode(n);
+     	
+     	if (this.isEmpty())
+     		this.min = newFirst;
+     	else {
+     		this.first.prevBro.setNextBro(newFirst); // next of last
+     		newFirst.setPrevBro(this.first.prevBro); // prev of new first 
+     		this.first.prevBro = newFirst; // prev of first
+     		newFirst.setNextBro(this.first); // next of new first
+     		if (n.getKey() < this.min.getKey())
+         		this.min = newFirst;
+     	}
+     	
+     	this.first = newFirst;
+     	this.size++;
+     	this.treeNum++;
+     
+     	return newFirst;
+     }
+
     
     /**
      * private HeapNode insertTree(int key)
@@ -480,25 +511,22 @@ public class FibonacciHeap
     	HeapNode curParent = H.min;
     	int[] arr = new int[k];
     	arr[0] = H.min.getKey();
-    	HeapNode[] nodesArr = new HeapNode[H.size()];
         FibonacciHeap tempH = new FibonacciHeap();
         HeapNode curMin = curParent.getFirstChild();
 
         while (index<k) { // O(k)
         	if (curParent.getFirstChild() != null) { 
-		        tempH.insert(curParent.getFirstChild().getKey());
-		        nodesArr[curParent.getFirstChild().getKey()] = curParent.getFirstChild();
+		        tempH.insertKMin(curParent.getFirstChild());
 		        HeapNode cur = curParent.getFirstChild().getNextBro();
 		    	while (cur != curParent.getFirstChild()) { // O(deg(H)) 
-		    		tempH.insert(cur.getKey()); 
-			        nodesArr[cur.getKey()] = cur; 
+		    		tempH.insertKMin(cur); 
 		    		cur = cur.getNextBro();
 		    	}
         	}
 	    	
-        	curMin = tempH.findMin(); // has the right key but from the new heap, O(1)
+        	curMin = tempH.findMin().kminNode; // O(1)
 	    	arr[index] = curMin.getKey();
-	    	curParent = nodesArr[curMin.getKey()]; //the original node from the heap H 
+	    	curParent = curMin; 
 	    	tempH.deleteMin(); // O(deg(H))	
 	    	index++;
         }
@@ -523,11 +551,19 @@ public class FibonacciHeap
 	HeapNode prevBro; // the previous (to the left or cyclic) brother of the node
 	HeapNode nextBro; // the next (to the right) brother of the node
 	HeapNode parent; // the parent of the node
+	HeapNode kminNode; // an equivalent node for kmin function
 
   	public HeapNode(int key) {
 	    this.key = key;
 	    this.prevBro = this;
 	    this.nextBro = this;
+      }
+  	
+  	public HeapNode(HeapNode n) {
+	    this.key = n.getKey();
+	    this.prevBro = this;
+	    this.nextBro = this;
+	    this.kminNode = n;
       }
 
   	public int getKey() {
