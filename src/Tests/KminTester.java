@@ -1,3 +1,5 @@
+package Tests;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,12 +27,14 @@ public class KminTester {
 
         int k = (int)Math.pow(2, 10);
         System.out.println(Arrays.toString(FibonacciHeap.kMin(H, k)));
-    }
+    
 
-		for (int i = 1; i <= 15; i++) {
-			System.out.println(i);
-			System.out.println(TestKMin(getBinomialTreeOfRank(i)));
+	for (int i = 1; i <= 15; i++) {
+			//System.out.println(i);
+			if (!TestKMin(getBinomialTreeOfRank(i))) 
+					System.out.println("false");
 		}
+	System.out.println("done");
 	}
 	
 	public static boolean TestKMin(FibonacciHeap H) {
@@ -66,4 +70,5 @@ public class KminTester {
 		return h;
 	}
 }
-}
+
+
