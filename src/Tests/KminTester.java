@@ -7,7 +7,7 @@ import java.util.List;
 
 public class KminTester {
     public static void main(String[] args){
-        FibonacciHeap H = new FibonacciHeap();
+       /* FibonacciHeap H = new FibonacciHeap();
         int j = 15; // Should be between 2 to 30
         double n = Math.pow(2, j)+1;
 
@@ -26,7 +26,7 @@ public class KminTester {
         H.deleteMin();
 
         int k = (int)Math.pow(2, 10);
-        System.out.println(Arrays.toString(FibonacciHeap.kMin(H, k)));
+        System.out.println(Arrays.toString(FibonacciHeap.kMin(H, k)));*/
     
 
 	for (int i = 1; i <= 15; i++) {
